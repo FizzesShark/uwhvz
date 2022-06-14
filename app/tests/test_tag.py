@@ -11,10 +11,14 @@ from app.tests.helpers.user_tester import UserTester
 class TagTest(TestCase):
     def setUp(self):
         user_tester = UserTester()
-        self.game = Game.objects.get(name='Test Game')
+        self.game = Game.objects.get(name="Test Game")
         self.tag_tester = TagTester()
-        self.human_user, self.human = user_tester.create_user_and_player('human@email.com', 'Human', 'Being')
-        _, zombie = user_tester.create_user_and_player('zombie@email.com', 'Zombie', 'Undead')
+        self.human_user, self.human = user_tester.create_user_and_player(
+            "human@email.com", "Human", "Being"
+        )
+        _, zombie = user_tester.create_user_and_player(
+            "zombie@email.com", "Zombie", "Undead"
+        )
         self.zombie = zombie.kill()
         self.game.started_on = timezone.now()
         self.game.save()

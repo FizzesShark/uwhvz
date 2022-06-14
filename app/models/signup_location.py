@@ -7,7 +7,7 @@ from .game import Game
 
 
 class SignupLocationManager(models.Manager):
-    def create_signup_location(self, name: str, game: Game) -> 'SignupLocation':
+    def create_signup_location(self, name: str, game: Game) -> "SignupLocation":
         signup_location = self.model(name=name, game=game)
         signup_location.save()
         return signup_location

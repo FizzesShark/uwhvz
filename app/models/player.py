@@ -12,24 +12,28 @@ from .util import generate_code
 
 
 class PlayerRole(Enum):
-    HUMAN = 'H'
-    ZOMBIE = 'Z'
-    SPECTATOR = 'S'
+    HUMAN = "H"
+    ZOMBIE = "Z"
+    SPECTATOR = "S"
 
 
 class PlayerManager(models.Manager):
-    def create_player(self, user: User, game: Game, role: PlayerRole, **extra_fields) -> 'Player':
+    def create_player(
+        self, user: User, game: Game, role: PlayerRole, **extra_fields
+    ) -> "Player":
         if user.participant(game):
             raise ValueError(f"The user {user} already exists in the game {game}.")
 
-        if 'code' in extra_fields:
+        if "code" in extra_fields:
             player = self.model(user=user, game=game, role=role, **extra_fields)
         else:
             code = generate_code(6)
             while self.filter(code=code):
                 code = generate_code(6)
 
-            player = self.model(user=user, game=game, role=role, code=code, **extra_fields)
+            player = self.model(
+                user=user, game=game, role=role, code=code, **extra_fields
+            )
 
         player.save()
         return player
@@ -39,10 +43,12 @@ class Player(Participant):
     code: str = models.CharField(max_length=9)
     role: Enum = EnumField(enum=PlayerRole, max_length=1)
     in_oz_pool: bool = models.BooleanField(default=False)
-    is_oz: bool = models.BooleanField(null=True,default=False)
-    is_score_public: bool = models.BooleanField(blank=True,null=True, default=False) 
+    is_oz: bool = models.BooleanField(null=True, default=False)
+    is_score_public: bool = models.BooleanField(blank=True, null=True, default=False)
 
-    faction: Faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
+    faction: Faction = models.ForeignKey(
+        Faction, on_delete=models.PROTECT, blank=True, null=True
+    )
     point_modifier: int = models.IntegerField(default=0)
 
     objects = PlayerManager()
@@ -55,9 +61,13 @@ class Player(Participant):
         if self.is_human:
             return 5
         eight_hours_ago = current_time - timedelta(hours=8)
-        return max(1, 5 - self.receiver_tags
-                   .filter(tagged_at__gte=eight_hours_ago, tagged_at__lt=current_time, active=True)
-                   .count())
+        return max(
+            1,
+            5
+            - self.receiver_tags.filter(
+                tagged_at__gte=eight_hours_ago, tagged_at__lt=current_time, active=True
+            ).count(),
+        )
 
     def score(self) -> int:
         """
@@ -70,33 +80,33 @@ class Player(Participant):
         for code in self.supplycode_set.all():
             total_score += code.value + code.point_modifier
 
-        faction_score_modifiers = Modifier.objects.filter(faction=self.faction,
-                                                          modifier_type=ModifierType.ONE_TIME_USE).all()
+        faction_score_modifiers = Modifier.objects.filter(
+            faction=self.faction, modifier_type=ModifierType.ONE_TIME_USE
+        ).all()
         for faction_point_modifier in faction_score_modifiers:
             total_score += faction_point_modifier.modifier_amount
 
         return total_score
-    
+
     def shop_score(self) -> int:
-        '''
+        """
         Points a player has left to use in purchases.
-        '''
+        """
         points_used = 0
         for purchase in self.buyer_name.filter(active=True):
             points_used += purchase.cost
-            
-        return self.score() - points_used
-        
 
-    def kill(self) -> 'Player':
+        return self.score() - points_used
+
+    def kill(self) -> "Player":
         if self.is_zombie:
             raise ValueError("This player is already a zombie.")
 
-        #self.active = False
+        # self.active = False
         self.role = PlayerRole.ZOMBIE
-        #self.point_modifier = -1*self.shop_score() #player should have effectively zero points
+        # self.point_modifier = -1*self.shop_score() #player should have effectively zero points
         self.save()
-        return #Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
+        return  # Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
 
     @property
     def is_player(self) -> bool:

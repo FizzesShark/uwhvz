@@ -5,7 +5,7 @@ from app.util import get_game_participants
 
 
 class Command(BaseCommand):
-    help = 'Prints a list of all emails'
+    help = "Prints a list of all emails"
 
     def handle(self, *args, **options):
         game = most_recent_game()

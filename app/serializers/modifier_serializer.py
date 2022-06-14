@@ -11,4 +11,4 @@ class ModifierSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Modifier
-        fields = ['modifier_amount', 'type']
+        fields = ["modifier_amount", "type"]

@@ -6,7 +6,7 @@ from .user import User
 
 
 class ModeratorManager(models.Manager):
-    def create_moderator(self, user: User, game: Game, **extra_fields) -> 'Moderator':
+    def create_moderator(self, user: User, game: Game, **extra_fields) -> "Moderator":
         if user.participant(game):
             raise ValueError(f"The user {user} already exists in the game {game}.")
 
@@ -17,8 +17,12 @@ class ModeratorManager(models.Manager):
 
 
 class Moderator(Participant):
-    character_name: str = models.CharField("Character name", max_length=180, blank=True, null=True)
-    score: str = models.CharField("Moderator 'score'. Can include letters.", max_length=180, blank=True, null=True)
+    character_name: str = models.CharField(
+        "Character name", max_length=180, blank=True, null=True
+    )
+    score: str = models.CharField(
+        "Moderator 'score'. Can include letters.", max_length=180, blank=True, null=True
+    )
 
     objects = ModeratorManager()
 

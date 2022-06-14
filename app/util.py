@@ -12,54 +12,84 @@ from queryset_sequence import QuerySetSequence
 from app.models import Game, Player, Moderator, Spectator
 
 
-def participant_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+def participant_required(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
+):
     def _is_participant(user):
         game = most_recent_game()
         return user.is_authenticated and user.participant(game)
 
-    actual_decorator = user_passes_test(_is_participant, login_url=login_url, redirect_field_name=redirect_field_name)
+    actual_decorator = user_passes_test(
+        _is_participant, login_url=login_url, redirect_field_name=redirect_field_name
+    )
     if function:
         return actual_decorator(function)
     return actual_decorator
 
 
-def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+def player_required(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
+):
     def _is_player(user):
         game = most_recent_game()
-        return user.is_authenticated and user.participant(game) and user.participant(game).is_player
+        return (
+            user.is_authenticated
+            and user.participant(game)
+            and user.participant(game).is_player
+        )
 
-    actual_decorator = user_passes_test(_is_player, login_url=login_url, redirect_field_name=redirect_field_name)
+    actual_decorator = user_passes_test(
+        _is_player, login_url=login_url, redirect_field_name=redirect_field_name
+    )
     if function:
         return actual_decorator(function)
     return actual_decorator
 
 
-def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+def moderator_required(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
+):
     def _is_moderator(user):
         game = most_recent_game()
-        return user.is_authenticated and user.participant(game) and user.participant(game).is_moderator or user.is_staff
+        return (
+            user.is_authenticated
+            and user.participant(game)
+            and user.participant(game).is_moderator
+            or user.is_staff
+        )
 
-    actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
+    actual_decorator = user_passes_test(
+        _is_moderator, login_url=login_url, redirect_field_name=redirect_field_name
+    )
     if function:
         return actual_decorator(function)
     return actual_decorator
 
-def necromancer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+
+def necromancer_required(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
+):
     def _is_necromancer(user):
         game = most_recent_game()
         return user.is_superuser
 
-    actual_decorator = user_passes_test(_is_necromancer, login_url=login_url, redirect_field_name=redirect_field_name)
+    actual_decorator = user_passes_test(
+        _is_necromancer, login_url=login_url, redirect_field_name=redirect_field_name
+    )
     if function:
         return actual_decorator(function)
     return actual_decorator
 
 
-def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+def volunteer_required(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
+):
     def _is_volunteer(user):
         return user.is_authenticated and (user.is_volunteer or user.is_staff)
 
-    actual_decorator = user_passes_test(_is_volunteer, login_url=login_url, redirect_field_name=redirect_field_name)
+    actual_decorator = user_passes_test(
+        _is_volunteer, login_url=login_url, redirect_field_name=redirect_field_name
+    )
     if function:
         return actual_decorator(function)
     return actual_decorator
@@ -70,7 +100,7 @@ def game_exists() -> bool:
 
 
 def most_recent_game() -> Game:
-    return Game.objects.all().order_by('-created_at').first()
+    return Game.objects.all().order_by("-created_at").first()
 
 
 def get_game_participants(game: Game):

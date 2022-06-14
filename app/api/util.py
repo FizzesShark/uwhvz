@@ -1,19 +1,25 @@
 from django.http import JsonResponse
 
-def success(body = ""):
+
+def success(body=""):
     return JsonResponse(body, status=200, safe=False)
 
-def badRequest(body = ""):
+
+def badRequest(body=""):
     return JsonResponse(body, status=400, safe=False)
 
-def unauthorized(body = ""):
+
+def unauthorized(body=""):
     return JsonResponse(body, status=401, safe=False)
 
-def forbidden(body = ""):
+
+def forbidden(body=""):
     return JsonResponse(body, status=403, safe=False)
 
-def notFound(body = ""):
+
+def notFound(body=""):
     return JsonResponse(body, status=404, safe=False)
 
-def conflictOrDuplicate(body = ""):
+
+def conflictOrDuplicate(body=""):
     return JsonResponse(body, status=409, safe=False)

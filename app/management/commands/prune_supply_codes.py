@@ -5,7 +5,7 @@ from app.util import most_recent_game
 
 
 class Command(BaseCommand):
-    help = 'Marks all unclaimed supply codes as inactive'
+    help = "Marks all unclaimed supply codes as inactive"
 
     def handle(self, *args, **options):
         game = most_recent_game()

@@ -9,10 +9,10 @@ from .user import User
 
 
 class ParticipantRole(Enum):
-    HUMAN = 'H'
-    ZOMBIE = 'Z'
-    SPECTATOR = 'S'
-    MODERATOR = 'M'
+    HUMAN = "H"
+    ZOMBIE = "Z"
+    SPECTATOR = "S"
+    MODERATOR = "M"
 
 
 class Participant(models.Model):

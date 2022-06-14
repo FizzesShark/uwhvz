@@ -78,7 +78,9 @@ class Command(BaseCommand):
         root = User.objects.create_superuser(
             "root", "toor", first_name="Super", last_name="User"
         )
-        game = Game.objects.create_game("Spring 2018", started_on=datetime.datetime.now() + datetime.timedelta(1))
+        game = Game.objects.create_game(
+            "Spring 2018", started_on=datetime.datetime.now() + datetime.timedelta(1)
+        )
 
         SignupLocation.objects.create_signup_location("SLC", game=game)
         SignupLocation.objects.create_signup_location("Online", game=game)

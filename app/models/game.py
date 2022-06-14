@@ -9,7 +9,7 @@ from .user import User
 
 
 class GameManager(models.Manager):
-    def create_game(self, name: str, **kwargs) -> 'Game':
+    def create_game(self, name: str, **kwargs) -> "Game":
         game = self.model(name=name, **kwargs)
         game.save()
         return game
@@ -22,6 +22,7 @@ class GameState(Enum):
     RUNNING: when a game has been created and has started; a game that's started.
     FINISHED: when a game has ended; a past/previous game.
     """
+
     SIGNUPS = auto()
     RUNNING = auto()
     FINISHED = auto()
@@ -35,24 +36,24 @@ class Game(models.Model):
     started_by: User = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='started_games',
+        related_name="started_games",
         null=True,
-        blank=True
+        blank=True,
     )
 
     ended_on: datetime = models.DateTimeField(null=True, blank=True)
     ended_by: User = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='ended_games',
+        related_name="ended_games",
         null=True,
-        blank=True
+        blank=True,
     )
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)
 
-    include_summary: bool = models.BooleanField(null=True,default=False)
+    include_summary: bool = models.BooleanField(null=True, default=False)
 
     objects = GameManager()
 

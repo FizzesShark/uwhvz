@@ -10,12 +10,7 @@ def get_signup_locations():
 
 class VolunteerSignupPlayerForm(forms.Form):
     email = forms.EmailField(
-        label="Email",
-        widget=forms.EmailInput(
-            attrs={
-                'class': 'ui-input'
-            }
-        )
+        label="Email", widget=forms.EmailInput(attrs={"class": "ui-input"})
     )
 
     location = forms.ChoiceField(
@@ -23,11 +18,11 @@ class VolunteerSignupPlayerForm(forms.Form):
         choices=get_signup_locations,
         widget=forms.Select(
             attrs={
-                'class': 'custom-select',
+                "class": "custom-select",
             }
-        )
+        ),
     )
 
     def clean_location(self):
-        data = self.cleaned_data['location']
+        data = self.cleaned_data["location"]
         return SignupLocation.objects.get(pk=data)
